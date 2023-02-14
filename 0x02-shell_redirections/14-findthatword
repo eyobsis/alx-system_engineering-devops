@@ -1,2 +1,2 @@
 #!/bin/bash
-egrep -i "roor" /etc/passwd
+egrep -i "root" /etc/passwd
