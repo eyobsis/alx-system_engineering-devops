@@ -21,3 +21,4 @@ do
   trap 'echo "Y U no love me?!"' SIGINT
   trap 'echo "I hate the kill command" && terminator' SIGTERM
   trap 'terminator' SIGQUIT
+done
