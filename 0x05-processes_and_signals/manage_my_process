@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# manage_my_process script
+
+PID_FILE="/var/run/my_process.pid"
+LOG_FILE="/tmp/my_process"
+
+start_process() {
+    if [ -f "$PID_FILE" ]; then
+        echo "manage_my_process is already running"
+    else
+        echo "Starting manage_my_process"
+        nohup bash -c "while true; do echo 'I am alive!'; sleep 2; done > $LOG_FILE & echo \$! > $PID_FILE"
+        echo "manage_my_process started"
+    fi
+}
+
+stop_process() {
+    if [ -f "$PID_FILE" ]; then
+        echo "Stopping manage_my_process"
+        kill "$(cat "$PID_FILE")"
+        rm "$PID_FILE"
+        echo "manage_my_process stopped"
+    else
+        echo "manage_my_process is not running"
+    fi
+}
+
+case "$1" in
+    start)
+        start_process
+        ;;
+    stop)
+        stop_process
+        ;;
+    restart)
+        stop_process
+        start_process
+        ;;
+    *)
+        echo "Usage: manage_my_process {start|stop|restart}"
+        exit 1
+        ;;
+esac

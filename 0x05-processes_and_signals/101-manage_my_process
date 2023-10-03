@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# 101-manage_my_process init script
+
+SCRIPT_PATH="/path/to/manage_my_process"
+
+case "$1" in
+    start)
+        "$SCRIPT_PATH" start
+        ;;
+    stop)
+        "$SCRIPT_PATH" stop
+        ;;
+    restart)
+        "$SCRIPT_PATH" restart
+        ;;
+    *)
+        echo "Usage: 101-manage_my_process {start|stop|restart}"
+        exit 1
+        ;;
+esac
