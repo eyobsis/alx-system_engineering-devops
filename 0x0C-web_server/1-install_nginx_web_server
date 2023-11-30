@@ -1,11 +1,17 @@
-#!/usr/bin/env bash
-# Installs Nginx
+#!/bin/bash
 
+# Update package lists
 apt-get update
+
+# Install nginx without prompts (-y flag)
 apt-get install -y nginx
+
+# Set up a default page with "Hello World!"
 echo "Hello World!" > /var/www/html/index.html
+
 # Ensure nginx is listening on port 80 (default)
 sed -i 's/.*listen\(.*\)80.*/    listen 80;/g' /etc/nginx/sites-available/default
 
 # Restart nginx without systemctl
 kill -s HUP $(pgrep nginx)
+
