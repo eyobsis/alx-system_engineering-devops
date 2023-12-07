@@ -1,0 +1,2 @@
+./0-nginx_likes_port_80: line 32: syntax error near unexpected token `else'
+./0-nginx_likes_port_80: line 32: `    else'
