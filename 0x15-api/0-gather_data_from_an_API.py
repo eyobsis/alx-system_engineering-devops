@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """
-This script retrieves and displays information about an employee's
-TODO list progress using a given employee ID.
+Retrieve and display information about an employee's TODO list progress
+using a given employee ID.
 """
 
 from sys import argv
@@ -27,11 +27,11 @@ def display_progress(user_data, todo_data):
     done_tasks = sum(task['completed'] for task in todo_data)
     i = total_tasks
     j = done_tasks
-    message = f"{user_data['name']} is done with tasks ({j}/{i}):"
-    print(message)
+    m = f"{user_data.get('name')} is done with tasks ({j}/{i}):"
+    print(m)
     for task in todo_data:
-        if task['completed']:
-            print(f"\t {task['title']}")
+        if task.get('completed'):
+            print(f"\t {task.get('title')}")
 
 
 if __name__ == "__main__":
