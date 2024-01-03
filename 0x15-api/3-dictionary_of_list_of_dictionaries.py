@@ -1,62 +1,79 @@
 #!/usr/bin/python3
+
 """
-This script retrieves and displays information about
-an employee's TODO list progress using a given employee ID.
-It also exports the data in JSON format for all employees.
+Export JSON data from API endpoints and organize it by user.
 """
 
-import csv
-import json as json_module
-import requests
-from sys import argv
+from requests import get
+import json
 
-def get_all_employees_data():
-    """Fetch data for all employees from the API."""
-    user_url = "https://jsonplaceholder.typicode.com/users"
-    user_response = requests.get(user_url)
-    users_data = user_response.json()
-    
-    all_employees_data = {}
-    
-    for user_data in users_data:
-        user_id = user_data['id']
-        _, todo_data = get_employee_data(user_id)
-        all_employees_data[user_id] = format_todo_data(user_data, todo_data)
-    
-    return all_employees_data
 
-def get_employee_data(employee_id):
-    """Fetch user and TODO list data from the API."""
-    id = employee_id
-    user_url = f"https://jsonplaceholder.typicode.com/users/{id}"
-    user_response = requests.get(user_url)
-    user_data = user_response.json()
-    todo_url = f"https://jsonplaceholder.typicode.com/todos?userId={id}"
-    todo_response = requests.get(todo_url)
-    todo_data = todo_response.json()
-    return user_data, todo_data
+def fetch_data(api_url):
+    """
+    Fetch data from the specified API endpoint.
 
-def format_todo_data(user_data, todo_data):
-    """Format TODO data for a single employee."""
-    formatted_data = []
-    for task in todo_data:
-        formatted_data.append({
-            "username": user_data['username'],
-            "task": task['title'],
-            "completed": task['completed']
-        })
-    return formatted_data
+    Parameters:
+    - api_url (str): The URL of the API endpoint.
 
-def export_all_to_json(all_employees_data):
-    """Export data for all employees to a single JSON file."""
-    json_filename = "todo_all_employees.json"
-    with open(json_filename, mode='w') as json_file:
-        json_module.dump(all_employees_data, json_file, indent=2)
-    print(f"Data exported to {json_filename}")
+    Returns:
+    - dict: The JSON response.
+    """
+    response = get(api_url)
+    data = response.json()
+    return data
+
+
+def organize_data_by_user(tasks, users):
+    """
+    Organize tasks data by user.
+
+    Parameters:
+    - tasks (list): List of tasks.
+    - users (list): List of user data.
+
+    Returns:
+    - dict: Organized data by user ID.
+    """
+    organized_data = {}
+
+    for user in users:
+        user_tasks = []
+        for task in tasks:
+            task_data = {}
+            if user['id'] == task['userId']:
+                task_data['username'] = user['username']
+                task_data['task'] = task['title']
+                task_data['completed'] = task['completed']
+                user_tasks.append(task_data)
+
+        organized_data[user['id']] = user_tasks
+
+    return organized_data
+
+
+def export_to_json(filename, data):
+    """
+    Export organized data to a JSON file.
+
+    Parameters:
+    - filename (str): The name of the output JSON file.
+    - data (dict): The organized data.
+
+    Returns:
+    - None
+    """
+    with open(filename, "w") as file:
+        json_obj = json.dumps(data)
+        file.write(json_obj)
+
 
 if __name__ == "__main__":
-    if len(argv) != 1:
-        print("Usage: python3 script_name.py")
-    else:
-        all_employees_data = get_all_employees_data()
-        export_all_to_json(all_employees_data)
+    # Fetch tasks and users data
+    tasks_data = fetch_data('https://jsonplaceholder.typicode.com/todos/')
+    users_data = fetch_data('https://jsonplaceholder.typicode.com/users')
+
+    # Organize tasks data by user
+    organized_data = organize_data_by_user(tasks_data, users_data)
+
+    # Export organized data to JSON file
+    export_to_json("todo_all_employees.json", organized_data)
