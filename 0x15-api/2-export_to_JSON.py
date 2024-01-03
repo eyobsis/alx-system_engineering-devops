@@ -6,6 +6,7 @@ It also exports the data in CSV format.
 """
 
 import csv
+import json as json_module
 import requests
 from sys import argv
 
@@ -61,8 +62,7 @@ def export_to_json(user_data, todo_data):
         })
 
     with open(json_filename, mode='w') as json_file:
-        json.dump(json_data, json_file, indent=2)
-
+        json_module.dump(json_data, json_file, indent=2)
     print(f"Data exported to {json_filename}")
 
 
