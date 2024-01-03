@@ -41,8 +41,6 @@ def export_to_csv(user_data, todo_data):
     csv_filename = f"{user_id}.csv"
     with open(csv_filename, mode='w', newline='') as csv_file:
         csv_writer = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-        a = ["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"]
-        csv_writer.writerow(a)
         for task in todo_data:
             j = str(task['completed'])
             a = [user_id, user_data['username'], j, task['title']]
