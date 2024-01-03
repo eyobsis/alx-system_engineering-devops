@@ -3,9 +3,8 @@
 Retrieve and display information about an employee's TODO list progress
 using a given employee ID.
 """
-
-from sys import argv
 import requests
+from sys import argv
 
 
 def get_employee_data(emp_id):
